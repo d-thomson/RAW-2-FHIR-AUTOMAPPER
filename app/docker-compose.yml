@@ -19,5 +19,4 @@ services:
       POSTGRES_USER: "flaskapp_user"
       POSTGRES_PASSWORD: "flaskapp_pass"
       POSTGRES_DB: "flaskapp"
-#    volumes:
-#      - ./postgres-data/postgres:/var/lib/postgresql/data
+
