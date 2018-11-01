@@ -9,7 +9,7 @@ pipeline{
           docker{image 'python:2.7'}
         }
         steps {
-          sh 'python app.py'
+          sh 'python RAW-2-FHIR-AUTOMAPPER/app/app.py'
         }
       }
       stage('Deploy'){
