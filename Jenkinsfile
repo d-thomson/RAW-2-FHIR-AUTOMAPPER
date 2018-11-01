@@ -17,7 +17,7 @@ pipeline{
                 script{
                     docker.withRegistry('https://build.hdap.gatech.edu'){
                         //Build and push the AUTOMAPPER application image
-                        def application = docker.build("RAW-2-FHIR-AUTOMAPPER:1.0", "-f ./app/Dockerfile ./app")
+                        def application = docker.build("raw-2-fhir-automapper:1.0", "-f ./app/Dockerfile ./app")
                         application.push('latest')
                     }
                 }
@@ -27,7 +27,7 @@ pipeline{
         stage('Notify'){
             steps{
                 script{
-                    rancher confirm: true, credentialId: 'rancher-server', endpoint: 'https://rancher.hdap.gatech.edu/v2-beta', environmentId: '1a7', environments: '', image: 'build.hdap.gatech.edu/RAW-2-FHIR-AUTOMAPPER:latest', ports: '', service: '/app/RAW-2-FHIR-AUTOMAPPER', timeout: 50
+                    rancher confirm: true, credentialId: 'rancher-server', endpoint: 'https://rancher.hdap.gatech.edu/v2-beta', environmentId: '1a7', environments: '', image: 'build.hdap.gatech.edu/raw-2-fhir-automapper:latest', ports: '', service: '/app/raw-2-fhir-automapper', timeout: 50
                     rancher confirm: true, credentialId: 'rancher-server', endpoint: 'https://rancher.hdap.gatech.edu/v2-beta', environmentId: '1a7', environments: '', image: 'postgres:10', ports: '', service: 'app/db', timeout: 50
                   }
                 }
