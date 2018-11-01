@@ -9,7 +9,7 @@ pipeline{
           docker{image 'python:2.7'}
         }
         steps {
-          sh 'python ./app/app.py'
+          echo "Hello VNNNNG" 
         }
       }
       stage('Deploy'){
