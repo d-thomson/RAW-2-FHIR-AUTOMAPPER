@@ -9,6 +9,8 @@ services:
     - "5000:5000"
     volumes:
       - .:/app
+    dns:
+    - 8.8.8.8
 
   db:
     image: postgres:10
