@@ -89,7 +89,7 @@ def close_db(error):
 
 
 @app.route('/')
-def show_guestbook():
+def show_info():
   # Let's show all posts from the last week, with a maximum of
   # 100 posts
   cur = get_db().cursor()
