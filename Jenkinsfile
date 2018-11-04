@@ -17,7 +17,7 @@ pipeline{
                 script{
                     docker.withRegistry('https://build.hdap.gatech.edu'){
                         //Build and push the AUTOMAPPER application image
-                        def application = docker.build("raw-2-fhir-automapper:1.0", "-f ./app")
+                        def application = docker.build("raw-2-fhir-automapper:1.0", "./app")
                         application.push('latest')
                     }
                 }
