@@ -6,7 +6,7 @@ services:
     links:
     - db
     ports:
-    - "80:5000"
+    - "5000:5000"
     volumes:
       - .:/app
     dns:
