@@ -31,8 +31,8 @@ pipeline{
         stage('Notify'){
             steps{
                 script{
-                    rancher confirm: true, credentialId: 'rancher-server', endpoint: 'https://rancher.hdap.gatech.edu/v2-beta', environmentId: '1a7', environments: '', image: 'build.hdap.gatech.edu/raw-2-fhir-automapper:latest', ports: '', service: 'raw-2-fhir-automapper/web', timeout: 120
                     rancher confirm: true, credentialId: 'rancher-server', endpoint: 'https://rancher.hdap.gatech.edu/v2-beta', environmentId: '1a7', environments: 'POSTGRES_USER:flaskapp_user,POSTGRES_PASSWORD:flaskapp_pass,POSTGRES_DB:flaskapp', image: 'postgres:10', ports: '', service: 'raw-2-fhir-automapper/db', timeout: 120
+                    rancher confirm: true, credentialId: 'rancher-server', endpoint: 'https://rancher.hdap.gatech.edu/v2-beta', environmentId: '1a7', environments: '', image: 'build.hdap.gatech.edu/raw-2-fhir-automapper:latest', ports: '', service: 'raw-2-fhir-automapper/web', timeout: 120
                   }
                 }
               }
