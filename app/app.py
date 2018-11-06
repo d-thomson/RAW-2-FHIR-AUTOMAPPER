@@ -96,7 +96,7 @@ def show_info():
   print "Debug: Database connection established"
   cur.close()
   print "Debug: Database connection closed"
-  return "Successfully established and closed DB connection!"
+  return "Successfully established and closed DB connection! Hello world!"
 
 
 
