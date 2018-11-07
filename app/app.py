@@ -119,7 +119,7 @@ def map():
         print password
 
         if form.validate():
-            flash('Pulling database tables...')
+            flash('Pulling database tables...', 'info')
 
             # Pull database column names for table
             #conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
@@ -140,10 +140,11 @@ def map():
                 else:
                     best_mappings[name] = difflib.get_close_matches(name,allFhirFields,1)[0]
 	     
-            flash(best_mappings)
+            flash(best_mappings, 'mappings')
+            flash(allFhirFields, 'fhirfields')
 
         else: 
-            flash('Please fill out all fields.')
+            flash('Please fill out all fields.', 'error')
 
     return render_template('map.html', form=form)
 

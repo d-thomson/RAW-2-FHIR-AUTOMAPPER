@@ -28,29 +28,65 @@
  
  
     </div>
+    <!--<button type="submit" class="btn btn-success">Automap</button>-->
     <button type="submit" class="btn btn-success">Automap</button>
   </form>
  
   <br>
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(category_filter=["info"]) %}
             {% if messages %}
- 
-        {% for message in messages %}
-            {% if "Error" not in message[1]: %}
-                <div class="alert alert-info">
-                <strong>Success! </strong> {{ message[1] }}
-                </div>
+				{% for message in messages %}
+					{% if "Error" not in message[1]: %}
+						<div class="alert alert-info">
+						<strong>Success! </strong> {{ message }}
+						</div>
+					{% endif %}
+		 
+					{% if "Error" in message[1]: %}
+						<div class="alert alert-warning">
+						{{ message }}
+						</div>
+					{% endif %}
+				{% endfor %}
             {% endif %}
- 
-            {% if "Error" in message[1]: %}
-                <div class="alert alert-warning">
-                {{ message[1] }}
-                </div>
-            {% endif %}
-        {% endfor %}
-            {% endif %}
+		{% endwith %}
+		
+		{% with errors = get_flashed_messages(category_filter=["error"]) %}
+			{% if errors %}
+				{% for message in errors %}
+				<div class="alert alert-warning">
+				<strong>Error! </strong> {{ message }}
+				</div>
+				{% endfor %}
+            {% endif %}			
+		{% endwith %}
+			
+		{% with mappings = get_flashed_messages(category_filter=["mappings"]) %}
+			{% if mappings %}
+				{% for message in mappings %}
+					<br><table border="1" cellpadding="1" cellspacing="1">
+					<th>Raw Data</th>	<th>FHIR Mapping</th>
+					{% for raw,fhir in mappings[0].iteritems() %}
+						<tr>
+						<td>{{ raw }}</td>
+						<td>
+							<select name="{{ raw }}">
+							<option value="{{ fhir }}" selected>{{ fhir }}</option>
+							{% with fhirlist = get_flashed_messages(category_filter=["fhirfields"]) %}
+								{% for fhir_field in fhirlist[0] %}
+									<option value="{{ fhir_field }}">{{ fhir_field }}</option>
+								{% endfor %}
+							{% endwith %}
+							</select>
+						</td>
+						</tr>
+					{% endfor %}
+					</table><br>
+					<button type="button" class="btn btn-success">Save Mapping</button>
+				{% endfor %}
+			{% endif %}
         {% endwith %}
- 
+
 </div>
 <br>            
 </div>
