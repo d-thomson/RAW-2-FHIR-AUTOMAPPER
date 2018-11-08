@@ -1,0 +1,58 @@
+Patient = {
+    'indentifier': 'Identifier',
+    'active': 'boolean',
+    'name': 'HumanName',
+    'telecom': 'ContactPoint',
+    'gender': 'code',
+    'birthdate': 'date',
+    'deceased': {'deceasedBoolean': 'boolean',
+                 'deceasedDateTime': 'dateTime'},
+    'address': 'Address',
+    'maritalStatus': 'CodeableConcept',
+    'multipleBirth': {'multipleBirthBoolean': 'boolean',
+                      'multipleBirthInteger': 'integer'},
+    'photo': 'Attachment',
+    'contact': {'relationship': 'CodeableConcept',
+                'name': 'HumanName',
+                'telecom': 'ContactPoint',
+                'address': 'Address',
+                'gender': 'code',
+                'organiztion': 'Reference',
+                'period': 'Period'},
+    'animal': {'species': 'CodeableConcept',
+               'breed': 'CodeableConcept',
+               'genderStatus': 'CodeableConcept'},
+    'communication': {'language': 'CodeableConcept',
+                      'preferred': 'boolean'},
+    'generalPractitioner': 'Reference',
+    'managingOrganization': 'Reference',
+    'link': {'other': 'Reference',
+             'type': 'code'}}
+
+HumanName = {'use': 'code',
+             'text': 'string',
+             'family': 'string',
+             'given': 'string',
+             'prefix': 'string',
+             'suffix': 'string',
+             'period': 'Period'}
+
+ContactPoint = {'system': 'code',
+                'value': 'string',
+                'use': 'code',
+                'rank': 'positiveInt',
+                'period': 'Period'}
+
+Address = {'use': 'code',
+           'type': 'code',
+           'text': 'string',
+           'line': 'string',
+           'city': 'string',
+           'district': 'string',
+           'state': 'string',
+           'postalCode': 'string',
+           'country': 'string',
+           'period': 'Period'}
+
+Period = {'start': 'dateTime',
+          'end': 'dateTime'}
