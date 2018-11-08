@@ -17,6 +17,15 @@ app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d444427567d441f2b6176a'
 
 
+""" Section: Helper classes """
+
+
+class ReusableForm(Form):
+    url = TextField('Database Endpoint:', validators=[validators.required()])
+    username = TextField('Username:', validators=[validators.required()])
+    password = TextField('Password:', validators=[validators.required()])
+
+
 """ Section: Helper functions """
 
 
@@ -43,6 +52,22 @@ def test_get_db():
                                 host='db')
     return g.db
 
+
+def get_db_schema(url, dbname, port, username, password):
+    """ returns a dictionary with key:table_name value:list(col_names) for a db """
+
+    database_string = 'host=' + url + ' port=' + port + ' dbname=' + dbname + ' user=' + username + ' password=' + password
+    conn = psycopg2.connect(database_string)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT table_name, column_name from information_schema.columns where table_name in (select tablename from pg_tables where schemaname = '" + dbname + "');")
+    output = cur.fetchall()
+    cur.close()
+
+    schema_dict = defaultdict(list)
+    for tablename, colname in output:
+        schema_dict[tablename].append(colname)
+    return schema_dict
 
 """ Section: Routes """
 
@@ -81,10 +106,6 @@ def root():
     return redirect(url_for('home'))
 
 
-class ReusableForm(Form):
-    url = TextField('Database Endpoint:', validators=[validators.required()])
-    username = TextField('Username:', validators=[validators.required()])
-    password = TextField('Password:', validators=[validators.required()])
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -180,23 +201,6 @@ def map():
             flash('Please fill out all fields.', 'error')
 
     return render_template('map.html', form=form)
-
-
-def get_db_schema(url, dbname, port, username, password):
-    """ returns a dictionary with key:table_name value:list(col_names) for a db """
-
-    database_string = 'host=' + url + ' port=' + port + ' dbname=' + dbname + ' user=' + username + ' password=' + password
-    conn = psycopg2.connect(database_string)
-    cur = conn.cursor()
-    cur.execute(
-        "SELECT table_name, column_name from information_schema.columns where table_name in (select tablename from pg_tables where schemaname = '" + dbname + "');")
-    output = cur.fetchall()
-    cur.close()
-
-    schema_dict = defaultdict(list)
-    for tablename, colname in output:
-        schema_dict[tablename].append(colname)
-    return schema_dict
 
 
 if __name__ == '__main__':
