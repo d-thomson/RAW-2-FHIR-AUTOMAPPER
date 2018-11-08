@@ -3,6 +3,7 @@ from wtforms import Form, TextField, TextAreaField, validators, StringField, Sub
 import psycopg2
 import difflib
 import itertools
+from collections import defaultdict
 
 Patient = {'indentifier':'Identifier',
                 'active':'boolean',
@@ -147,6 +148,21 @@ def map():
             flash('Please fill out all fields.', 'error')
 
     return render_template('map.html', form=form)
+
+def get_db_schema(url, dbname, port, username, password):
+    """ returns a dictionary with key:table_name value:list(col_names) for a db """
+
+    database_string = 'host=' + url + ' port=' + port + ' dbname=' + dbname +' user=' + username + ' password=' + password
+    conn = psycopg2.connect(database_string)
+    cur = conn.cursor()
+    cur.execute("SELECT table_name, column_name from information_schema.columns where table_name in (select tablename from pg_tables where schemaname = '" + dbname + "');")
+    output = cur.fetchall()
+    cur.close()
+
+    schema_dict = defaultdict(list)
+    for tablename, colname in output:
+        schema_dict[tablename].append(colname)
+    return schema_dict
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
