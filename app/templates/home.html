@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Home</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="static/css/main.css" />
+        <link rel="stylesheet" href="static/css/sumoselect.css" />
+        <link rel="stylesheet" href="static/js/datepicker/themes/default.css" type="text/css">
+        <link rel="stylesheet" href="static/js/datepicker/themes/default.date.css" type="text/css">
+    </head>
+    <body>
+
+        <!-- Sidebar -->
+            <section id="sidebar">
+                <div class="inner">
+                    <nav>
+                        <ul>
+                            <li><a href="#intro">Welcome</a></li>
+                            <li><a href="#one">Map Resource</a></li>
+                        </ul>
+                    </nav>
+
+                    {% if version %}
+                        <br><br>
+                        <p><span style="font-size: 0.75rem"><strong>Version:</strong> {{ version }}</span> </p>
+                    {% endif %}
+
+                </div>
+            </section>
+
+        <!-- Wrapper -->
+            <div id="wrapper">
+
+                <!-- Intro -->
+                    <section id="intro" class="wrapper style1 fullscreen fade-up">
+                        <div class="inner">
+                            <h1>Raw to FHIR Auto-mapper</h1>
+                            <p>We can provide some description here...</p>
+                            <ul class="actions">
+                                <li><a href="logout" class="button">Log Out</a></li>
+                            </ul>
+                        </div>
+                    </section>
+
+                <!-- Map resource -->
+                    <section id="one" class="wrapper style1 fullscreen fade-up">
+                        <div class="inner">
+                            <h2></h2>
+                            <div class="split style2">
+                                <section>
+                                    <form target="_blank" method="post" action="/map_table">
+
+                                        <div class="field">
+                                            <label for="database_endpoint">Database Endpoint:</label>
+                                            <input type="text" name="database_endpoint" id="database_endpoint" required/>
+                                        </div>
+                                        <div class="field">
+                                            <label for="database_username">Database Username:</label>
+                                            <input type="text" name="database_username" id="database_username" required/>
+                                        </div>
+                                        <div class="field">
+                                            <label for="database_password">Database Password:</label>
+                                            <input type="password" name="database_password" id="database_password" required/>
+                                        </div>
+                                        <ul class="actions">
+                                            <input type="submit" class="button">
+                                        </ul>
+
+                                    </form>
+                                </section>
+                                <section>
+                                    <ul class="contact">
+                                        <!--
+                                            Right space
+                                        -->
+                                    </ul>
+                                </section>
+                            </div>
+                        </div>
+                    </section>
+
+            </div>
+
+        <!-- Scripts -->
+            <!-- <script src="static/js/jquery.min.js"></script>-->
+            <script src="static/js/jquery.sumoselect.min.js"></script>
+            <script src="static/js/datepicker/picker.js"></script>
+            <script src="static/js/datepicker/picker.date.js"></script>
+
+            <script src="static/js/jquery.scrollex.min.js"></script>
+            <script src="static/js/jquery.scrolly.min.js"></script>
+            <script src="static/js/skel.min.js"></script>
+            <script src="static/js/util.js"></script>
+            <script src="static/js/main.js"></script>
+    </body>
+</html>

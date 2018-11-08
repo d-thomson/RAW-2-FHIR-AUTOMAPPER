@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="">
+
+        <title>Login</title>
+
+        <!-- CSS -->
+        
+        <link href="static/login.css" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div class="login">
+            <div class="login-screen">
+                <div class="app-title">
+                    <h1>Login</h1>
+                </div>
+
+                <form class="login-form" action="" method="post">
+                    <div class="control-group">
+                    <input type="text" class="login-field" value="" placeholder="username" id="login-name" name="username" value="{{request.form.username}}">
+                    <label class="login-field-icon fui-user" for="login-name"></label>
+                    </div>
+
+                    <div class="control-group">
+                    <input type="password" class="login-field" value="" placeholder="password" id="login-pass" name="password" value="{{request.form.password}}">
+                    <label class="login-field-icon fui-lock" for="login-pass"></label>
+                    </div>
+
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+                    {% if error %}
+                        <br><br>
+                        <p class="error"><strong>Error:</strong> {{ error }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
