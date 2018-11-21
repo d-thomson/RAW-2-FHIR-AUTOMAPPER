@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS flaskapp;
 
 CREATE DATABASE IF NOT EXISTS flaskapp;
 CREATE USER flaskapp_user WITH ENCRYPTED PASSWORD 'flaskapp_pass';
-CREATE USER flaskapp_user WITH ENCRYPTED PASSWORD 'flaskapp_pass';
 GRANT ALL PRIVILEGES ON DATABASE flaskapp TO flaskapp_user;
 
 CREATE TABLE "user" ( 
