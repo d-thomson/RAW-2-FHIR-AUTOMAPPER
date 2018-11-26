@@ -126,15 +126,16 @@ def map_table():
 
             flash('Pulling database tables...', 'info')
 
-            # Pull database column names for table f_person
             # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
             database_string = 'host=' + url + ' port=5433' + ' dbname=mimic_v5 user=' + username + ' password=' + password
             conn = psycopg2.connect(database_string)
             cur = conn.cursor()
 
-            # Get mimic_vt.f_person
+            # ---------------------------------------------
+            # Pull database column names for table f_person
+            # ---------------------------------------------
+
             cur.execute("SELECT * FROM mimic_v5.f_person LIMIT 0")
-            cur.close()
             colnames = [name[0] for name in cur.description]
 
             best_mappings = {}
@@ -147,8 +148,35 @@ def map_table():
                 else:
                     best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
 
+            # Flash best mappings for patients table
             flash(best_mappings, 'mappings-f_person')
             flash(allFhirFields, 'fhirfields-f_person')
+
+            # ---------------------------------------------
+            # Pull database column names for table observation
+            # ---------------------------------------------
+            cur.execute("SELECT * FROM mimic_v5.observation LIMIT 0")
+            colnames = [name[0] for name in cur.description]
+
+            best_mappings = {}
+            allFhirFields = Observation  # Todo: Add more?
+
+            # Iterate through all database column names and find best match to FHIR data type
+            for name in colnames:
+                if len(difflib.get_close_matches(name, allFhirFields)) == 0:
+                    best_mappings[name] = 'UNKNOWN'
+                else:
+                    best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
+
+            # Flash best mappings for observations table
+            flash(best_mappings, 'mappings-observation')
+            flash(allFhirFields, 'fhirfields-observation')
+
+            # ---------------------------------------------
+            # Close cur as final step
+            # ---------------------------------------------
+            cur.close()
+
 
         else:
             # Re-direct to home if the form was not sent properly
