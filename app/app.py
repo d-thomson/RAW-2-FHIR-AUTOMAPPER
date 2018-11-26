@@ -124,6 +124,7 @@ def map_table():
             url = request.form['database_endpoint']
             username = request.form['database_username']
             password = request.form['database_password']
+            db_name = request.form['database_name']
             db_port = request.form['database_port']
 
             flash('Pulling database tables...', 'info')
