@@ -1,0 +1,1 @@
+Please provide all documentation (and links, etc.) related to your research in a directory called “Research.” This folder should be located within the “Final Deliverable” directory. Please make the file names clear and intuitive. (ex. 21391ujafesoaeiu9032-few.pdf file would be renamed to something like “Defining Statistical Significance.pdf”)

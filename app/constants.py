@@ -1,57 +1,9 @@
-Patient = {'indentifier': 'Identifier',
-           'active': 'boolean',
-           'name': 'HumanName',
-           'telecom': 'ContactPoint',
-           'gender': 'code',
-           'birthdate': 'date',
-           'deceased': {'deceasedBoolean': 'boolean',
-                        'deceasedDateTime': 'dateTime'},
-           'address': 'Address',
-           'maritalStatus': 'CodeableConcept',
-           'multipleBirth': {'multipleBirthBoolean': 'boolean',
-                             'multipleBirthInteger': 'integer'},
-           'photo': 'Attachment',
-           'contact': {'relationship': 'CodeableConcept',
-                       'name': 'HumanName',
-                       'telecom': 'ContactPoint',
-                       'address': 'Address',
-                       'gender': 'code',
-                       'organiztion': 'Reference',
-                       'period': 'Period'},
-           'animal': {'species': 'CodeableConcept',
-                      'breed': 'CodeableConcept',
-                      'genderStatus': 'CodeableConcept'},
-           'communication': {'language': 'CodeableConcept',
-                             'preferred': 'boolean'},
-           'generalPractitioner': 'Reference',
-           'managingOrganization': 'Reference',
-           'link': {'other': 'Reference',
-                    'type': 'code'}}
+Patient = ['maritalStatus', 'telecom', 'photo', 'birthDate', '_gender', 'generalPractitioner', '_multipleBirthBoolean', 'managingOrganization', 'deceasedDateTime', 'multipleBirthInteger', 'animal', 'communication', '_deceasedBoolean', 'multipleBirthBoolean', '_deceasedDateTime', '_multipleBirthInteger', 'link', 'address', 'active', 'name', 'resourceType', 'gender', '_active', 'deceasedBoolean', 'contact', 'identifier', '_birthDate']
 
-HumanName = {'use': 'code',
-             'text': 'string',
-             'family': 'string',
-             'given': 'string',
-             'prefix': 'string',
-             'suffix': 'string',
-             'period': 'Period'}
+HumanName = ['_use', 'use', 'suffix', 'family', '_prefix', 'text', '_given', 'given', 'period', 'prefix', '_text', '_suffix', '_family']
 
-ContactPoint = {'system': 'code',
-                'value': 'string',
-                'use': 'code',
-                'rank': 'positiveInt',
-                'period': 'Period'}
+ContactPoint = ['_use', '_rank', 'use', 'system', 'value', 'period', '_value', 'rank', '_system']
 
-Address = {'use': 'code',
-           'type': 'code',
-           'text': 'string',
-           'line': 'string',
-           'city': 'string',
-           'district': 'string',
-           'state': 'string',
-           'postalCode': 'string',
-           'country': 'string',
-           'period': 'Period'}
+Address = ['_use', '_line', 'use', '_district', 'district', 'city', 'text', '_country', '_state', '_type', '_postalCode', 'period', 'country', 'state', '_text', 'postalCode', 'line', '_city', 'type']
 
-Period = {'start': 'dateTime',
-          'end': 'dateTime'}
+Period = ['start', '_end', '_start', 'end']

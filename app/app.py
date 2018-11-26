@@ -138,8 +138,7 @@ def map_table():
             colnames = [name[0] for name in cur.description]
 
             best_mappings = {}
-            allFhirFields = list(
-                itertools.chain(Patient.keys(), HumanName.keys(), ContactPoint.keys(), Address.keys(), Period.keys()))
+            allFhirFields = Patient + HumanName + ContactPoint + Address + Period
 
             # Iterate through all database column names and find best match to FHIR data type
             for name in colnames:
