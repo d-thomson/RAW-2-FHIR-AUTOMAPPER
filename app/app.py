@@ -16,7 +16,6 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d444427567d441f2b6176a'
 
-
 """ Section: Helper classes """
 
 
@@ -37,6 +36,7 @@ def login_required(f):
             return f(*args, **kwargs)
         else:
             return redirect(url_for('login'))
+
     return wrap
 
 
@@ -68,6 +68,7 @@ def get_db_schema(url, dbname, port, username, password):
     for tablename, colname in output:
         schema_dict[tablename].append(colname)
     return schema_dict
+
 
 """ Section: Routes """
 
@@ -132,7 +133,7 @@ def map_table():
             cur = conn.cursor()
 
             # ---------------------------------------------
-            # Pull database column names for table f_person
+            # Pull database column names for f_person table
             # ---------------------------------------------
 
             cur.execute("SELECT * FROM mimic_v5.f_person LIMIT 0")
@@ -152,14 +153,15 @@ def map_table():
             flash(best_mappings, 'mappings-f_person')
             flash(allFhirFields, 'fhirfields-f_person')
 
-            # ---------------------------------------------
-            # Pull database column names for table observation
-            # ---------------------------------------------
+            # ------------------------------------------------
+            # Pull database column names for observation table
+            # ------------------------------------------------
             cur.execute("SELECT * FROM mimic_v5.observation LIMIT 0")
             colnames = [name[0] for name in cur.description]
 
             best_mappings = {}
-            allFhirFields = Observation  # Todo: Add more?
+            # Todo: Check allFhirFields and add more?
+            allFhirFields = Observation + Observation_ReferenceRange + Observation_Component + Observation_Related
 
             # Iterate through all database column names and find best match to FHIR data type
             for name in colnames:
@@ -171,6 +173,30 @@ def map_table():
             # Flash best mappings for observations table
             flash(best_mappings, 'mappings-observation')
             flash(allFhirFields, 'fhirfields-observation')
+
+            # ------------------------------------------------
+            # Pull database column names for measurement table
+            # ------------------------------------------------
+            cur.execute("SELECT * FROM mimic_v5.measurement LIMIT 0")
+            colnames = [name[0] for name in cur.description]
+
+            best_mappings = {}
+            # Todo: Check allFhirFields and add more?
+            allFhirFields = DeviceComponent + DeviceMetric + DeviceMetric_Calibration \
+                            + MeasureReport_Group + MeasureReport + MeasureReport_Population1 + MeasureReport_Stratifier + MeasureReport_Population + MeasureReport_Stratum \
+                            + Goal_Target + PlanDefinition_Target \
+                            + Measure_Stratifier + Measure_Group + Measure_Population + Measure_SupplementalData + Measure
+
+            # Iterate through all database column names and find best match to FHIR data type
+            for name in colnames:
+                if len(difflib.get_close_matches(name, allFhirFields)) == 0:
+                    best_mappings[name] = 'UNKNOWN'
+                else:
+                    best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
+
+            # Flash best mappings for observations table
+            flash(best_mappings, 'mappings-measurement')
+            flash(allFhirFields, 'fhirfields-measurement')
 
             # ---------------------------------------------
             # Close cur as final step

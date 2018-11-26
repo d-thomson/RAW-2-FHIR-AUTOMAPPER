@@ -61,6 +61,8 @@
                             <div class="tab">
                               <button class="tablinks" onclick="openTab(event, 'Patients')">Patients</button>
                               <button class="tablinks" onclick="openTab(event, 'Observations')">Observations</button>
+                              <button class="tablinks" onclick="openTab(event, 'Measurements')">Measurements</button>
+
                             </div>
 
                             <br>
@@ -149,6 +151,45 @@
                                                     <select name="{{ raw }}">
                                                     <option value="{{ fhir }}" selected>{{ fhir }}</option>
                                                     {% with fhirlist = get_flashed_messages(category_filter=["fhirfields-observation"]) %}
+                                                        {% for fhir_field in fhirlist[0] %}
+                                                            <option value="{{ fhir_field }}">{{ fhir_field }}</option>
+                                                        {% endfor %}
+                                                    {% endwith %}
+                                                    </select>
+                                                </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </table>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+
+
+                            <!--Content for Measurements tab-->
+                            <div id="Measurements" class="tabcontent" style="display: block;">
+                                {% with errors = get_flashed_messages(category_filter=["error"]) %}
+                                    {% if errors %}
+                                        {% for message in errors %}
+                                        <div class="alert alert-warning">
+                                        <strong>Error! </strong> {{ message }}
+                                        </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+
+                                {% with mappings = get_flashed_messages(category_filter=["mappings-measurement"]) %}
+                                    {% if mappings %}
+                                        {% for message in mappings %}
+                                            <br><table border="1" cellpadding="1" cellspacing="1">
+                                            <th>Raw Data</th>	<th>FHIR Mapping</th>
+                                            {% for raw,fhir in mappings[0].iteritems() %}
+                                                <tr>
+                                                <td>{{ raw }}</td>
+                                                <td>
+                                                    <select name="{{ raw }}">
+                                                    <option value="{{ fhir }}" selected>{{ fhir }}</option>
+                                                    {% with fhirlist = get_flashed_messages(category_filter=["fhirfields-measurement"]) %}
                                                         {% for fhir_field in fhirlist[0] %}
                                                             <option value="{{ fhir_field }}">{{ fhir_field }}</option>
                                                         {% endfor %}
