@@ -123,17 +123,16 @@ def map_table():
             url = request.form['database_endpoint']
             username = request.form['database_username']
             password = request.form['database_password']
-            print url
-            print username
-            print password
 
             flash('Pulling database tables...', 'info')
 
-            # Pull database column names for table
+            # Pull database column names for table f_person
             # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
             database_string = 'host=' + url + ' port=5433' + ' dbname=mimic_v5 user=' + username + ' password=' + password
             conn = psycopg2.connect(database_string)
             cur = conn.cursor()
+
+            # Get mimic_vt.f_person
             cur.execute("SELECT * FROM mimic_v5.f_person LIMIT 0")
             cur.close()
             colnames = [name[0] for name in cur.description]
@@ -149,58 +148,14 @@ def map_table():
                 else:
                     best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
 
-            flash(best_mappings, 'mappings')
-            flash(allFhirFields, 'fhirfields')
+            flash(best_mappings, 'mappings-f_person')
+            flash(allFhirFields, 'fhirfields-f_person')
+
         else:
             # Re-direct to home if the form was not sent properly
             return redirect(url_for('home'))
 
     return render_template("table.html")
-
-
-@app.route('/map', methods=['GET', 'POST'])
-def map():
-    form = ReusableForm(request.form)
-
-    print form.errors
-    if request.method == 'POST':
-        url = request.form['url']
-        username = request.form['username']
-        password = request.form['password']
-        print url
-        print username
-        print password
-
-        if form.validate():
-            flash('Pulling database tables...', 'info')
-
-            # Pull database column names for table
-            # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
-            database_string = 'host=' + url + ' port=5433' + ' dbname=mimic_v5 user=' + username + ' password=' + password
-            conn = psycopg2.connect(database_string)
-            cur = conn.cursor()
-            cur.execute("SELECT * FROM mimic_v5.f_person LIMIT 0")
-            cur.close()
-            colnames = [name[0] for name in cur.description]
-
-            best_mappings = {}
-            allFhirFields = list(
-                itertools.chain(Patient.keys(), HumanName.keys(), ContactPoint.keys(), Address.keys(), Period.keys()))
-
-            # Iterate through all database column names and find best match to FHIR data type
-            for name in colnames:
-                if len(difflib.get_close_matches(name, allFhirFields)) == 0:
-                    best_mappings[name] = 'UNKNOWN'
-                else:
-                    best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
-
-            flash(best_mappings, 'mappings')
-            flash(allFhirFields, 'fhirfields')
-
-        else:
-            flash('Please fill out all fields.', 'error')
-
-    return render_template('map.html', form=form)
 
 
 if __name__ == '__main__':
