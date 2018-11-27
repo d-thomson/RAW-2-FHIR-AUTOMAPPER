@@ -163,11 +163,13 @@ def map_table():
             url = request.form['database_endpoint']
             username = request.form['database_username']
             password = request.form['database_password']
+            db_name = request.form['database_name']
+            db_port = request.form['database_port']
 
             flash('Pulling database tables...', 'info')
 
             # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
-            database_string = 'host=' + url + ' port=5433' + ' dbname=mimic_v5 user=' + username + ' password=' + password
+            database_string = 'host=' + url + ' port='+ db_port + ' dbname=mimic_v5 user=' + username + ' password=' + password
             conn = psycopg2.connect(database_string)
             cur = conn.cursor()
 
