@@ -5,6 +5,7 @@ import difflib
 import itertools
 from collections import defaultdict
 from functools import wraps
+from fuzzywuzzy import process
 
 # Import dictionaries: Patient, HumanName, ContactPoint, Address, Period, etc.
 from constants import *
@@ -70,6 +71,44 @@ def get_db_schema(url, dbname, port, username, password):
     return schema_dict
 
 
+
+
+# List to hold variable names defined in constants.py
+constants_list = None
+
+
+def find_match(col_name):
+
+    global constants_list
+
+    if constants_list is None:
+        constants_list = []
+        with open("constants.py") as f:
+            for line in f:
+                if len(line.strip()) != 0:
+                    x = line.split("=")
+                    constants_list.append(x[0].strip())
+
+    # Now check each list in constants.py and get the one with the highest score
+
+    highest_score = None
+    highest_score_constant = None
+    highest_score_value = None
+
+    for element in constants_list:
+        if len(globals()[element]) != 0:
+            result = process.extractOne(col_name, globals()[element])
+            if highest_score is None:
+                highest_score = result[1]
+                highest_score_constant = element
+                highest_score_value = result[0]
+            elif result[1] > highest_score:
+                highest_score = result[1]
+                highest_score_constant = element
+                highest_score_value = result[0]
+
+    return [highest_score, highest_score_constant, highest_score_value]
+
 """ Section: Routes """
 
 
@@ -132,6 +171,10 @@ def map_table():
             conn = psycopg2.connect(database_string)
             cur = conn.cursor()
 
+
+            # Todo: Allow user to edit this value
+            THRESHOLD = 40
+
             # ---------------------------------------------
             # Pull database column names for f_person table
             # ---------------------------------------------
@@ -144,10 +187,16 @@ def map_table():
 
             # Iterate through all database column names and find best match to FHIR data type
             for name in colnames:
-                if len(difflib.get_close_matches(name, allFhirFields)) == 0:
-                    best_mappings[name] = 'UNKNOWN'
+
+                # Output returned from find_match
+                # [highest_score, highest_score_resource-name, highest_score_resource-value]
+
+                match = find_match(name)
+
+                if match[0] < THRESHOLD:
+                    best_mappings[name] = ['UNKNOWN', 'UNKNOWN']
                 else:
-                    best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
+                    best_mappings[name] = [match[1], match[2]]
 
             # Flash best mappings for patients table
             flash(best_mappings, 'mappings-f_person')
