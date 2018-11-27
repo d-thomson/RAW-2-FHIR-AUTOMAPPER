@@ -226,21 +226,45 @@
 					</section>
 			</div>
 
+
+    <script src="static/js/constants.js"></script>
+
     <script>
+
+        function removeOptions(select_element)
+        {
+            var i;
+            for(i = select_element.options.length - 1 ; i >= 0 ; i--)
+            {
+                select_element.remove(i);
+            }
+        }
 
         $( document ).ready(function() {
             $('select').on('change', function (e) {
                 var id = e.target.id;
                 var id_split = id.split("-");
+                // console.log(id_split);
+
 
                 if (id_split[1] === 'name'){
                     console.log(id + " clicked");
                     var optionSelected = $("option:selected", this);
                     var valueSelected = this.value;
-                    console.log("Value selected: " + valueSelected)
+                    console.log("Value selected: " + valueSelected);
+                    console.log(window[valueSelected]);
 
-                    // Async fetch value and populate the associated dropdown list
+                    var operator_name = id_split[0] + '-' + 'value' + '-' + id_split[2] ;
+                    console.log("Operator name:" + operator_name);
 
+                    var replace_select = document.getElementById(operator_name);
+
+                    removeOptions(replace_select);
+
+                    // Add new options
+                    for (var i = 0; i < window[valueSelected].length; ++i) {
+                        replace_select.append(new Option(window[valueSelected][i], window[valueSelected][i], false, false));
+                    }
                 }
             });
         });
