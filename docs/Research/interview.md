@@ -16,3 +16,5 @@ Followup Email after discussing the requirements with Alvin.
 > 
 > We will start with openly available EHR datasets that we can connect to or that we can host databases for testing.
 
+Alvin was looking to use this on old databases that need conversion to FHIR resources and so the idea is to automate mapping as much as possible so that it is simpler for a person making sure that the mapping is correct.
+
