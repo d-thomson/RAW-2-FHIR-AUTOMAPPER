@@ -97,7 +97,7 @@
 
                             {% set table_identifier = "table1" %}
 
-                            <div id="Patients" class="tabcontent active" style="display: block;">
+                            <div id="Patients" class="tabcontent" style="display: block;">
                                 {% with errors = get_flashed_messages(category_filter=["error"]) %}
                                     {% if errors %}
                                         {% for message in errors %}
@@ -145,7 +145,7 @@
                             </div>
 
                             <!--Content for Observations tab-->
-                            <div id="Observations" class="tabcontent" style="display: block;">
+                            <div id="Observations" class="tabcontent">
                                 {% with errors = get_flashed_messages(category_filter=["error"]) %}
                                     {% if errors %}
                                         {% for message in errors %}
@@ -184,7 +184,7 @@
 
 
                             <!--Content for Measurements tab-->
-                            <div id="Measurements" class="tabcontent" style="display: block;">
+                            <div id="Measurements" class="tabcontent">
                                 {% with errors = get_flashed_messages(category_filter=["error"]) %}
                                     {% if errors %}
                                         {% for message in errors %}
