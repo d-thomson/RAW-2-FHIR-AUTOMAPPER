@@ -1,3 +1,4 @@
+from __future__ import print_function
 from flask import Flask, render_template, g, request, redirect, url_for, flash, session
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 import psycopg2
@@ -6,6 +7,7 @@ import itertools
 from collections import defaultdict
 from functools import wraps
 from fuzzywuzzy import process
+import sys
 
 # Import dictionaries: Patient, HumanName, ContactPoint, Address, Period, etc.
 from constants import *
@@ -118,7 +120,6 @@ def login():
         username = request.form['username']
         password = request.form['password']
         if username == "demo" and password == "password!23":
-            print "DEBUG: User logged in"
             session['logged_in'] = True
             return redirect(url_for('home'))
         else:
@@ -170,9 +171,10 @@ def map_table():
 
             # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
             database_string = 'host=' + url + ' port='+ db_port + ' dbname=mimic_v5 user=' + username + ' password=' + password
+            print('DB String ' + database_string, file=sys.stderr)
+
             conn = psycopg2.connect(database_string)
             cur = conn.cursor()
-
 
             # Todo: Allow user to edit this value
             THRESHOLD = 40
@@ -224,6 +226,7 @@ def map_table():
             # Flash best mappings for observations table
             flash(best_mappings, 'mappings-observation')
             flash(allFhirFields, 'fhirfields-observation')
+            flash(constants_list, 'fhir_names')
 
             # ------------------------------------------------
             # Pull database column names for measurement table

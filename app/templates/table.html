@@ -109,7 +109,16 @@
                                             {% for raw, fhir in mappings[0].iteritems() %}
                                                 <tr>
                                                 <td>{{ raw }}</td>
-                                                <td>{{ fhir[0] }}</td>
+                                                <td>
+                                                    <select name="{{ raw }}_fhir_name">
+                                                        <option value="{{ fhir[0] }}" selected>{{ fhir[0] }}</option>
+                                                        {% with fhir_names_list = get_flashed_messages(category_filter=["fhir_names"]) %}
+                                                            {% for fhir_name in fhir_names_list[0] %}
+                                                                <option value="{{ fhir_name }}">{{ fhir_name }}</option>
+                                                            {% endfor %}
+                                                        {% endwith %}
+                                                    </select>
+                                                </td>
                                                 <td>
                                                     <select name="{{ raw }}">
                                                     <option value="{{ fhir[1] }}" selected>{{ fhir[1] }}</option>
