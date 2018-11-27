@@ -5,6 +5,8 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="static/css/main.css" />
+        <script src="static/js/jquery-3.min.js"></script>
+
 	</head>
 	<body>
 		<!-- Header -->
@@ -225,19 +227,37 @@
 			</div>
 
     <script>
-    function openTab(evt, tableName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+
+        $( document ).ready(function() {
+            $('select').on('change', function (e) {
+                var id = e.target.id;
+                var id_split = id.split("-");
+
+                if (id_split[1] === 'name'){
+                    console.log(id + " clicked");
+                    var optionSelected = $("option:selected", this);
+                    var valueSelected = this.value;
+                    console.log("Value selected: " + valueSelected)
+
+                    // Async fetch value and populate the associated dropdown list
+
+                }
+            });
+        });
+
+        function openTab(evt, tableName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tableName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(tableName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
     </script>
 
 	</body>
