@@ -9,7 +9,7 @@ Provide instructions [“navigate to this URL… type in this… click on that�
 
 ## Run Application Locally
 * Necessary tools for running locally: Git, Docker
-1. Checkout code from github via 'git https://github.gatech.edu/gt-cs6440-hit-fall2018/RAW-2-FHIR-AUTOMAPPER.git'
+1. Checkout code from github via 'git clone https://github.gatech.edu/gt-cs6440-hit-fall2018/RAW-2-FHIR-AUTOMAPPER.git'
 2. Navigate into the 'app' directory
 3. With Docker running, build the application with 'docker-compose build'
 4. Once application is built, the application can be deployed with 'docker-compose up'
