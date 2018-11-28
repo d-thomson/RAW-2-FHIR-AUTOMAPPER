@@ -14,3 +14,8 @@ Provide instructions [“navigate to this URL… type in this… click on that�
 3. With Docker running, build the application with 'docker-compose build'
 4. Once application is built, the application can be deployed with 'docker-compose up'
 5. If deployment succeeds, the application page should be availabe at http://localhost/login
+
+## Application Login
+To access the functioning demo application, the following credentails can be used to login:
+* username: demo
+* password: password!23
