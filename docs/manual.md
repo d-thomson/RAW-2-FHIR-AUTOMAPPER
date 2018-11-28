@@ -3,7 +3,7 @@ Every application MUST include an “as detailed as necessary” manual. All of 
 # Raw to FHIR Auto-mapper Manual
 **Team Vnnnng**:
   * Kevaugn Brown
-  * Bryan Gorges,
+  * Bryan Gorges
   * Zach Hanley
   * Sumit Kumar
   * Steven Seidman
