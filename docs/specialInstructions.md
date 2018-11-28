@@ -19,3 +19,6 @@ Provide instructions [“navigate to this URL… type in this… click on that�
 To access the functioning demo application, the following credentails can be used to login:
 * username: demo
 * password: password!23
+
+Click the 'Sign in' button after credentials entry for successful login.
+
