@@ -34,8 +34,8 @@ A user can access and use the web application through the deployed version of th
 
 ## Using the Application
 Once connected to the application, the user will be presented a login screen before being able to access the core functionality. For the purposes of a demo and sandbox environment, a successful login can be achieved using the following credentials
-* username: demo
-* password: password!23
+* **username:** demo
+* **password:** password!23
 
 INSERT SCREENSHOT OF LOGIN PAGE HERE
 
