@@ -29,5 +29,15 @@ A user can access and use the web application through the deployed version of th
 1. Checkout code from github via 'git https://github.gatech.edu/gt-cs6440-hit-fall2018/RAW-2-FHIR-AUTOMAPPER.git'
 2. Navigate into the 'app' directory
 3. With Docker running, build the application with 'docker-compose build'
-4. Once application is built, the application can be deployed with 'docker-compose up'
+4. Once the application is built, the application can be deployed with 'docker-compose up'
 5. If deployment succeeds, the application page should be availabe at http://localhost/login
+
+## Using the Application
+Once connected to the application, the user will be presented a login screen before being able to access the core functionality. For the purposes of a demo and sandbox environment, a successful login can be achieved using the following credentials
+* username: demo
+* password: password!23
+
+INSERT SCREENSHOT OF LOGIN PAGE HERE
+
+
+
