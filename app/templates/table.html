@@ -60,11 +60,11 @@
 					<section id="main" class="wrapper">
 						<div class="inner">
 
+                            <!--Tabs-->
                             <div class="tab">
-                              <button class="tablinks" onclick="openTab(event, 'Patients')">Patients</button>
-                              <button class="tablinks" onclick="openTab(event, 'Observations')">Observations</button>
-                              <button class="tablinks" onclick="openTab(event, 'Measurements')">Measurements</button>
-
+                                {% for table in selected_tables %}
+                                    <button class="tablinks" onclick="openTab(event, '{{ table }}')">{{ table }}</button>
+                                {% endfor %}
                             </div>
 
                             <br>
@@ -91,135 +91,74 @@
 
                             <button type="button" class="btn btn-success">Save Mapping</button>
 
-                            <!--Content for Patients Tab-->
-                            <!-- Increment this for every table to keep IDs unique -->
-                            <!--Todo: Pass this through app.py-->
 
-                            {% set table_identifier = "table1" %}
+                            <!-- Set content for each tab-->
 
-                            <div id="Patients" class="tabcontent" style="display: block;">
-                                {% with errors = get_flashed_messages(category_filter=["error"]) %}
-                                    {% if errors %}
-                                        {% for message in errors %}
-                                        <div class="alert alert-warning">
-                                        <strong>Error! </strong> {{ message }}
-                                        </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
+                            {% for table in selected_tables %}
+                                    {% set table_identifier = table %}
 
-                                {% with mappings = get_flashed_messages(category_filter=["mappings-f_person"]) %}
-                                    {% if mappings %}
-                                        {% for message in mappings %}
-                                            <br><table border="1" cellpadding="1" cellspacing="1">
-                                            <th>Raw Data</th>	<th>FHIR Resource Name</th> <th>FHIR Resource Value</th>
-                                            {% for raw, fhir in mappings[0].iteritems() %}
-                                                <tr>
-                                                <td>{{ raw }}</td>
-                                                <td>
-                                                    <select name="{{ raw }}_fhir_name" id="{{ table_identifier }}-name-{{ loop.index }}">
-                                                        <option value="{{ fhir[0] }}" selected>{{ fhir[0] }}</option>
-                                                        {% with fhir_names_list = get_flashed_messages(category_filter=["fhir_names"]) %}
-                                                            {% for fhir_name in fhir_names_list[0] %}
-                                                                <option value="{{ fhir_name }}">{{ fhir_name }}</option>
-                                                            {% endfor %}
-                                                        {% endwith %}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select name="{{ raw }}" id="{{ table_identifier }}-value-{{ loop.index }}">
-                                                    <option value="{{ fhir[1] }}" selected>{{ fhir[1] }}</option>
-                                                    {% with fhirlist = get_flashed_messages(category_filter=["fhirfields-f_person"]) %}
-                                                        {% for fhir_field in fhirlist[0] %}
-                                                            <option value="{{ fhir_field }}">{{ fhir_field }}</option>
-                                                        {% endfor %}
-                                                    {% endwith %}
-                                                    </select>
-                                                </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </table>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
+                                    <!-- Start table content -->
 
-                            <!--Content for Observations tab-->
-                            <div id="Observations" class="tabcontent">
-                                {% with errors = get_flashed_messages(category_filter=["error"]) %}
-                                    {% if errors %}
-                                        {% for message in errors %}
-                                        <div class="alert alert-warning">
-                                        <strong>Error! </strong> {{ message }}
-                                        </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
+                                    <div id="{{ table }}" class="tabcontent" style="display: block;">
 
-                                {% with mappings = get_flashed_messages(category_filter=["mappings-observation"]) %}
-                                    {% if mappings %}
-                                        {% for message in mappings %}
-                                            <br><table border="1" cellpadding="1" cellspacing="1">
-                                            <th>Raw Data</th>	<th>FHIR Mapping</th>
-                                            {% for raw,fhir in mappings[0].iteritems() %}
-                                                <tr>
-                                                <td>{{ raw }}</td>
-                                                <td>
-                                                    <select name="{{ raw }}">
-                                                    <option value="{{ fhir }}" selected>{{ fhir }}</option>
-                                                    {% with fhirlist = get_flashed_messages(category_filter=["fhirfields-observation"]) %}
-                                                        {% for fhir_field in fhirlist[0] %}
-                                                            <option value="{{ fhir_field }}">{{ fhir_field }}</option>
-                                                        {% endfor %}
-                                                    {% endwith %}
-                                                    </select>
-                                                </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </table>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
+                                        <!-- Display any errors-->
+                                        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+                                            {% if errors %}
+                                                {% for message in errors %}
+                                                <div class="alert alert-warning">
+                                                <strong>Error! </strong> {{ message }}
+                                                </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endwith %}
+
+                                        <!-- Load table content -->
+                                        {% set category_filter_1 = "mappings-"+table %}
+
+                                        {% with mappings = get_flashed_messages(category_filter=[category_filter_1]) %}
+
+                                            {% if mappings %}
+                                                {% for message in mappings %}
+                                                    <br><table border="1" cellpadding="1" cellspacing="1">
+                                                    <th>Raw Data</th>	<th>FHIR Resource Name</th> <th>FHIR Resource Value</th>
+                                                    {% for raw, fhir in mappings[0].iteritems() %}
+                                                        <tr>
+                                                        <td>{{ raw }}</td>
+                                                        <td>
+                                                            <select name="{{ raw }}_fhir_name" id="{{ table_identifier }}-name-{{ loop.index }}">
+                                                                <option value="{{ fhir[0] }}" selected>{{ fhir[0] }}</option>
+                                                                {% with fhir_names_list = get_flashed_messages(category_filter=["fhir_names"]) %}
+                                                                    {% for fhir_name in fhir_names_list[0] %}
+                                                                        <option value="{{ fhir_name }}">{{ fhir_name }}</option>
+                                                                    {% endfor %}
+                                                                {% endwith %}
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="{{ raw }}" id="{{ table_identifier }}-value-{{ loop.index }}">
+                                                            <option value="{{ fhir[1] }}" selected>{{ fhir[1] }}</option>
+                                                            {% set category_filter_2 = "fhirfields-"+table %}
+
+                                                            {% with fhirlist = get_flashed_messages(category_filter=[category_filter_2]) %}
+                                                                {% for fhir_field in fhirlist[0] %}
+                                                                    <option value="{{ fhir_field }}">{{ fhir_field }}</option>
+                                                                {% endfor %}
+                                                            {% endwith %}
+                                                            </select>
+                                                        </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </table>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
 
 
-                            <!--Content for Measurements tab-->
-                            <div id="Measurements" class="tabcontent">
-                                {% with errors = get_flashed_messages(category_filter=["error"]) %}
-                                    {% if errors %}
-                                        {% for message in errors %}
-                                        <div class="alert alert-warning">
-                                        <strong>Error! </strong> {{ message }}
-                                        </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
+                                    <!--End table content-->
 
-                                {% with mappings = get_flashed_messages(category_filter=["mappings-measurement"]) %}
-                                    {% if mappings %}
-                                        {% for message in mappings %}
-                                            <br><table border="1" cellpadding="1" cellspacing="1">
-                                            <th>Raw Data</th>	<th>FHIR Mapping</th>
-                                            {% for raw,fhir in mappings[0].iteritems() %}
-                                                <tr>
-                                                <td>{{ raw }}</td>
-                                                <td>
-                                                    <select name="{{ raw }}">
-                                                    <option value="{{ fhir }}" selected>{{ fhir }}</option>
-                                                    {% with fhirlist = get_flashed_messages(category_filter=["fhirfields-measurement"]) %}
-                                                        {% for fhir_field in fhirlist[0] %}
-                                                            <option value="{{ fhir_field }}">{{ fhir_field }}</option>
-                                                        {% endfor %}
-                                                    {% endwith %}
-                                                    </select>
-                                                </td>
-                                                </tr>
-                                            {% endfor %}
-                                            </table>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
+                            {% endfor %}
+
 
 
 						</div>

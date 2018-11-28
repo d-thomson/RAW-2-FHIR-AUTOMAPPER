@@ -19,6 +19,17 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d444427567d441f2b6176a'
 
+
+""" Section: Global Variables """
+
+
+url = None
+username = None
+password = None
+db_name = None
+db_port = None
+
+
 """ Section: Helper classes """
 
 
@@ -73,6 +84,22 @@ def get_db_schema(url, dbname, port, username, password):
     return schema_dict
 
 
+def get_db_tables(url, dbname, port, username, password):
+    """ returns a dictionary with key:table_name value:list(col_names) for a db """
+
+    database_string = 'host=' + url + ' port=' + port + ' dbname=' + dbname + ' user=' + username + ' password=' + password
+    conn = psycopg2.connect(database_string)
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT table_name, column_name from information_schema.columns where table_name in (select tablename from pg_tables where schemaname = '" + dbname + "');")
+    output = cur.fetchall()
+    cur.close()
+
+    return_list = []
+    for tablename, colname in output:
+        return_list.append(tablename)
+
+    return return_list
 
 
 # List to hold variable names defined in constants.py
@@ -153,13 +180,15 @@ def home():
     return render_template("home.html", version=version)
 
 
-@app.route('/map_table', methods=['GET', 'POST'])
+@app.route('/select_tables', methods=['GET', 'POST'])
 @login_required
-def map_table():
+def select_tables():
     if request.method == 'POST':
 
         # If user is trying to get mapping
         if 'database_endpoint' in request.form:
+
+            global url, username, password, db_name, db_port
 
             url = request.form['database_endpoint']
             username = request.form['database_username']
@@ -167,103 +196,88 @@ def map_table():
             db_name = request.form['database_name']
             db_port = request.form['database_port']
 
-            flash('Pulling database tables...', 'info')
+            db_tables = get_db_tables(url=url, dbname=db_name, port=db_port, username=username, password=password)
 
-            # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
-            database_string = 'host=' + url + ' port='+ db_port + ' dbname=mimic_v5 user=' + username + ' password=' + password
-            print('DB String ' + database_string, file=sys.stderr)
+            return render_template("select_tables.html", tables=db_tables)
+        else:
+            print ("Error: database_endpoint not found in form. Returning home.")
 
-            conn = psycopg2.connect(database_string)
-            cur = conn.cursor()
+    # Re-direct to home if the form was not sent properly
+    return redirect(url_for('home'))
 
-            # Todo: Allow user to edit this value
-            THRESHOLD = 40
 
-            # ---------------------------------------------
-            # Pull database column names for f_person table
-            # ---------------------------------------------
+@app.route('/map_table', methods=['GET', 'POST'])
+@login_required
+def map_table():
+    if request.method == 'POST':
 
-            cur.execute("SELECT * FROM mimic_v5.f_person LIMIT 0")
-            colnames = [name[0] for name in cur.description]
+        # The user passed a bunch of tables to map; get the values and proceed
+        if 'state[]' in request.form:
 
-            best_mappings = {}
-            allFhirFields = Patient + HumanName + ContactPoint + Address + Period
+            global url, username, password, db_name, db_port
 
-            # Iterate through all database column names and find best match to FHIR data type
-            for name in colnames:
+            selected_tables = request.form.getlist('state[]')
+            selected_tables_processed = []
 
-                # Output returned from find_match
-                # [highest_score, highest_score_resource-name, highest_score_resource-value]
+            if len(selected_tables) == 0:
+                flash('No tables selected to map...', 'info')
 
-                match = find_match(name)
+            for table in selected_tables:
+                table = str(table).strip()
+                selected_tables_processed.append(table)
+                print("--- Loading table for" + table, sys.stderr)
 
-                if match[0] < THRESHOLD:
-                    best_mappings[name] = ['UNKNOWN', 'UNKNOWN']
-                else:
-                    best_mappings[name] = [match[1], match[2]]
+                # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
+                database_string = 'host=' + url + ' port=' + db_port + ' dbname=' + db_name + ' user=' + username + ' password=' + password
+                print('DB String ' + database_string, file=sys.stderr)
+                conn = psycopg2.connect(database_string)
+                cur = conn.cursor()
 
-            # Flash best mappings for patients table
-            flash(best_mappings, 'mappings-f_person')
-            flash(allFhirFields, 'fhirfields-f_person')
+                # Todo: Allow user to edit this value
+                THRESHOLD = 40
 
-            # ------------------------------------------------
-            # Pull database column names for observation table
-            # ------------------------------------------------
-            cur.execute("SELECT * FROM mimic_v5.observation LIMIT 0")
-            colnames = [name[0] for name in cur.description]
+                # ---------------------------------------------
+                # Pull database column names for table
+                # ---------------------------------------------
+                sql_statement = "SELECT * FROM %s.%s LIMIT 0" % (db_name, table)
+                cur.execute(sql_statement)
+                colnames = [name[0] for name in cur.description]
+                cur.close()
 
-            best_mappings = {}
-            # Todo: Check allFhirFields and add more?
-            allFhirFields = Observation + Observation_ReferenceRange + Observation_Component + Observation_Related
+                best_mappings = {}
+                match = None
+                # Iterate through all database column names and find best match to FHIR data type
+                for name in colnames:
 
-            # Iterate through all database column names and find best match to FHIR data type
-            for name in colnames:
-                if len(difflib.get_close_matches(name, allFhirFields)) == 0:
-                    best_mappings[name] = 'UNKNOWN'
-                else:
-                    best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
+                    # Output returned from find_match
+                    # [highest_score, highest_score_resource-name, highest_score_resource-value]
 
-            # Flash best mappings for observations table
-            flash(best_mappings, 'mappings-observation')
-            flash(allFhirFields, 'fhirfields-observation')
-            flash(constants_list, 'fhir_names')
+                    match = find_match(name)
 
-            # ------------------------------------------------
-            # Pull database column names for measurement table
-            # ------------------------------------------------
-            cur.execute("SELECT * FROM mimic_v5.measurement LIMIT 0")
-            colnames = [name[0] for name in cur.description]
+                    if match[0] < THRESHOLD:
+                        best_mappings[name] = ['UNKNOWN', 'UNKNOWN']
+                    else:
+                        best_mappings[name] = [match[1], match[2]]
 
-            best_mappings = {}
-            # Todo: Check allFhirFields and add more?
-            allFhirFields = DeviceComponent + DeviceMetric + DeviceMetric_Calibration \
-                            + MeasureReport_Group + MeasureReport + MeasureReport_Population1 + MeasureReport_Stratifier + MeasureReport_Population + MeasureReport_Stratum \
-                            + Goal_Target + PlanDefinition_Target \
-                            + Measure_Stratifier + Measure_Group + Measure_Population + Measure_SupplementalData + Measure
+                # Flash best mappings for patients table
+                tag_mappings = "mappings-" + table
+                flash(best_mappings, tag_mappings)
+                flash(constants_list, 'fhir_names')
 
-            # Iterate through all database column names and find best match to FHIR data type
-            for name in colnames:
-                if len(difflib.get_close_matches(name, allFhirFields)) == 0:
-                    best_mappings[name] = 'UNKNOWN'
-                else:
-                    best_mappings[name] = difflib.get_close_matches(name, allFhirFields, 1)[0]
+                if match is not None:
+                    tag_fhirfields = "fhirfields-%s" % table
+                    flash(globals()[match[1]], tag_fhirfields)
 
-            # Flash best mappings for observations table
-            flash(best_mappings, 'mappings-measurement')
-            flash(allFhirFields, 'fhirfields-measurement')
-
-            # ---------------------------------------------
-            # Close cur as final step
-            # ---------------------------------------------
-            cur.close()
-
+            # After all selected tables have been processed, show the table.html page
+            return render_template("table.html", selected_tables=selected_tables_processed)
 
         else:
             # Re-direct to home if the form was not sent properly
             return redirect(url_for('home'))
 
-    return render_template("table.html")
+    return render_template("home.html")
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
+    # get_db_schema(url='data.hdap.gatech.edu', dbname='mimic_v5', password='hdapM1m1c4Students!', username='team0', port='5433')
