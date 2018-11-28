@@ -289,7 +289,7 @@ def map_table():
 			#c.execute(login_query)
 			#conn.close()
 
-			json = "{\"My Mapping\": { \"mappings\": ["
+			json = "{\""+mapping_name+"\": { \"mappings\": ["
 			for a,b,c in itertools.izip(raw,fhir_resource_name,fhir_resource_value):
 				json += "{\"raw\": \""+a+"\", \"fhir_resource\": \""+b+"\", \"fhir_value\": \""+c+"\"},"
 			json = json[:-1] #get rid of last comma in the sequence
