@@ -9,7 +9,7 @@ Every application MUST include an “as detailed as necessary” manual. All of 
   * Steven Seidman
   * Daniel Thomson
   
-**github link:** https://github.gatech.edu/gt-cs6440-hit-fall2018/RAW-2-FHIR-AUTOMAPPER
+**GitHub link:** https://github.gatech.edu/gt-cs6440-hit-fall2018/RAW-2-FHIR-AUTOMAPPER
 
 ## Introduction
 
