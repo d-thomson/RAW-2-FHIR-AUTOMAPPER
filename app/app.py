@@ -1,9 +1,10 @@
 from __future__ import print_function
-from flask import Flask, render_template, g, request, redirect, url_for, flash, session
+from flask import Flask, render_template, g, request, redirect, url_for, flash, session, send_file
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 import psycopg2
 import difflib
 import itertools
+import StringIO
 from collections import defaultdict
 from functools import wraps
 from fuzzywuzzy import process
@@ -212,68 +213,97 @@ def map_table():
     if request.method == 'POST':
 
         # The user passed a bunch of tables to map; get the values and proceed
-        if 'state[]' in request.form:
+		if 'state[]' in request.form:
 
-            global url, username, password, db_name, db_port
+			global url, username, password, db_name, db_port
 
-            selected_tables = request.form.getlist('state[]')
-            selected_tables_processed = []
+			selected_tables = request.form.getlist('state[]')
+			selected_tables_processed = []
 
-            if len(selected_tables) == 0:
-                flash('No tables selected to map...', 'info')
+			if len(selected_tables) == 0:
+				flash('No tables selected to map...', 'info')
 
-            for table in selected_tables:
-                table = str(table).strip()
-                selected_tables_processed.append(table)
-                print("--- Loading table for" + table, sys.stderr)
+			for table in selected_tables:
+				table = str(table).strip()
+				selected_tables_processed.append(table)
+				print("--- Loading table for" + table, sys.stderr)
 
-                # conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
-                database_string = 'host=' + url + ' port=' + db_port + ' dbname=' + db_name + ' user=' + username + ' password=' + password
-                print('DB String ' + database_string, file=sys.stderr)
-                conn = psycopg2.connect(database_string)
-                cur = conn.cursor()
+				# conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
+				database_string = 'host=' + url + ' port=' + db_port + ' dbname=' + db_name + ' user=' + username + ' password=' + password
+				print('DB String ' + database_string, file=sys.stderr)
+				conn = psycopg2.connect(database_string)
+				cur = conn.cursor()
 
-                # Todo: Allow user to edit this value
-                THRESHOLD = 40
+				# Todo: Allow user to edit this value
+				THRESHOLD = 40
 
-                # ---------------------------------------------
-                # Pull database column names for table
-                # ---------------------------------------------
-                sql_statement = "SELECT * FROM %s.%s LIMIT 0" % (db_name, table)
-                cur.execute(sql_statement)
-                colnames = [name[0] for name in cur.description]
-                cur.close()
+				# ---------------------------------------------
+				# Pull database column names for table
+				# ---------------------------------------------
+				sql_statement = "SELECT * FROM %s.%s LIMIT 0" % (db_name, table)
+				cur.execute(sql_statement)
+				colnames = [name[0] for name in cur.description]
+				cur.close()
 
-                best_mappings = {}
-                match = None
-                # Iterate through all database column names and find best match to FHIR data type
-                for name in colnames:
+				best_mappings = {}
+				match = None
+				# Iterate through all database column names and find best match to FHIR data type
+				for name in colnames:
 
-                    # Output returned from find_match
-                    # [highest_score, highest_score_resource-name, highest_score_resource-value]
+					# Output returned from find_match
+					# [highest_score, highest_score_resource-name, highest_score_resource-value]
 
-                    match = find_match(name)
+					match = find_match(name)
 
-                    if match[0] < THRESHOLD:
-                        best_mappings[name] = ['UNKNOWN', 'UNKNOWN']
-                    else:
-                        best_mappings[name] = [match[1], match[2]]
+					if match[0] < THRESHOLD:
+						best_mappings[name] = ['UNKNOWN', 'UNKNOWN']
+					else:
+						best_mappings[name] = [match[1], match[2]]
 
-                # Flash best mappings for patients table
-                tag_mappings = "mappings-" + table
-                flash(best_mappings, tag_mappings)
-                flash(constants_list, 'fhir_names')
+				# Flash best mappings for patients table
+				tag_mappings = "mappings-" + table
+				flash(best_mappings, tag_mappings)
+				flash(constants_list, 'fhir_names')
 
-                if match is not None:
-                    tag_fhirfields = "fhirfields-%s" % table
-                    flash(globals()[match[1]], tag_fhirfields)
+				if match is not None:
+					tag_fhirfields = "fhirfields-%s" % table
+					flash(globals()[match[1]], tag_fhirfields)
 
-            # After all selected tables have been processed, show the table.html page
-            return render_template("table.html", selected_tables=selected_tables_processed)
+			# After all selected tables have been processed, show the table.html page
+			return render_template("table.html", selected_tables=selected_tables_processed)
+			
+		elif request.form['actiontype'] == 'save':	
+			raw = request.form.getlist('raw')
+			fhir_resource_name = request.form.getlist('fhir_name')
+			fhir_resource_value = request.form.getlist('fhir_value')
+			form_data = zip(raw,fhir_resource_name,fhir_resource_value)
+			mapping_name = request.form['name']
+			filename = mapping_name.replace(" ","_")
+			#user_id = 1
+			#mapid = get_next_mapping_id()
+			#
+			#c, conn = connection()
+			#			
+			#save_query = ("INSERT INTO fhir_mappings (mappingID, userID, mapping_name, raw, fhir_name, fhir_value) " +
+			#"VALUES("+mapid+", "+user_id+", 'name', 'family_name', 'Organization_Contact', 'name','');")
+			#c.execute(login_query)
+			#conn.close()
 
-        else:
-            # Re-direct to home if the form was not sent properly
-            return redirect(url_for('home'))
+			json = "{\"My Mapping\": { \"mappings\": ["
+			for a,b,c in itertools.izip(raw,fhir_resource_name,fhir_resource_value):
+				json += "{\"raw\": \""+a+"\", \"fhir_resource\": \""+b+"\", \"fhir_value\": \""+c+"\"},"
+			json = json[:-1] #get rid of last comma in the sequence
+			json += "]}}"
+
+			strIO = StringIO.StringIO()
+			strIO.write(str(json))
+			strIO.seek(0)
+			return send_file(strIO,attachment_filename=filename+".json",as_attachment=True)
+			#return render_template('save.html', data=zip(raw,fhir_resource_name,fhir_resource_value), name=mapping_name)
+			
+		else:
+			# Re-direct to home if the form was not sent properly
+			return redirect(url_for('home'))
 
     return render_template("home.html")
 

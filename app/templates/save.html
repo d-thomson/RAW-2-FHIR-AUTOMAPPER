@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Saved Mapping</title>
+       <link rel="stylesheet" media="screen" href ="static/bootstrap.min.css">
+       <link rel="stylesheet" href="static/bootstrap-theme.min.css">
+       <meta name="viewport" content = "width=device-width, initial-scale=1.0">
+		<h2>Mapping Saved as {{name}}!</h2>
+    </head>
+    <body>
+		<header id="header">
+			<a href="saved_mappings" class="title">View My Saved Mappings</a>
+			<br>
+			<a href="home" class="title">Home</a>
+		</header>
+		<table border="1" cellpadding="5" cellspacing="5">
+		<th> Raw Data </th>
+		<th> FHIR Resource Name </th>
+		<th> FHIR Resource Value </th>
+		{% for raw,fhir_resource_name,fhir_resource_value in data %}
+			<tr>
+				<td>{{ raw }}</td>
+				<td>{{ fhir_resource_name }}</td>
+				<td>{{ fhir_resource_value }}</td>
+			</tr>
+		{% endfor %}
+	</body>
+</html>
