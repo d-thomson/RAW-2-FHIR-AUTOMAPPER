@@ -92,7 +92,7 @@
                             <form method="post">
 							<input type="text" name="name" id="name" placeholder="My Mapping">
 							<br>
-							<button type="submit">Save Mapping</button>
+							<button type="submit">Export as JSON</button>
 							<input type="hidden" name="actiontype" id="actiontype" value="save">
 
 
@@ -104,6 +104,7 @@
                                     <!-- Start table content -->
 
                                     <div id="{{ table }}" class="tabcontent" style="display: block;">
+									<input type ="hidden" name = "table" value="{{ table }}"></input>
 
                                         <!-- Display any errors-->
                                         {% with errors = get_flashed_messages(category_filter=["error"]) %}
@@ -128,10 +129,10 @@
                                                     {% for raw, fhir in mappings[0].iteritems() %}
                                                         <tr>
                                                         <td>
-														<input type ="hidden" name = "raw" value="{{ raw }}">{{ raw }}</input>
+														<input type ="hidden" name = "{{ table }}-raw" value="{{ raw }}">{{ raw }}</input>
 														</td>
                                                         <td>
-                                                            <select name="fhir_name" id="{{ table_identifier }}-name-{{ loop.index }}">
+                                                            <select name="{{ table }}-fhir_name" id="{{ table_identifier }}-name-{{ loop.index }}">
                                                                 <option value="{{ fhir[0] }}" selected>{{ fhir[0] }}</option>
                                                                 {% with fhir_names_list = get_flashed_messages(category_filter=["fhir_names"]) %}
                                                                     {% for fhir_name in fhir_names_list[0] %}
@@ -141,7 +142,7 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <select name="fhir_value" id="{{ table_identifier }}-value-{{ loop.index }}">
+                                                            <select name="{{ table }}-fhir_value" id="{{ table_identifier }}-value-{{ loop.index }}">
                                                             <option value="{{ fhir[1] }}" selected>{{ fhir[1] }}</option>
                                                             {% set category_filter_2 = "fhirfields-"+table %}
 

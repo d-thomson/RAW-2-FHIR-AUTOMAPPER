@@ -5,7 +5,8 @@ import psycopg2
 import difflib
 import itertools
 import StringIO
-from collections import defaultdict
+import json
+from collections import defaultdict, OrderedDict
 from functools import wraps
 from fuzzywuzzy import process
 import sys
@@ -22,7 +23,6 @@ app.config['SECRET_KEY'] = '7d441f27d444427567d441f2b6176a'
 
 
 """ Section: Global Variables """
-
 
 url = None
 username = None
@@ -106,6 +106,17 @@ def get_db_tables(url, dbname, port, username, password):
 # List to hold variable names defined in constants.py
 constants_list = None
 
+def init_constants():
+
+    global constants_list
+
+    if constants_list is None:
+        constants_list = []
+        with open("constants.py") as f:
+            for line in f:
+                if len(line.strip()) != 0:
+                    x = line.split("=")
+                    constants_list.append(x[0].strip())
 
 def find_match(col_name):
 
@@ -210,6 +221,7 @@ def select_tables():
 @app.route('/map_table', methods=['GET', 'POST'])
 @login_required
 def map_table():
+
     if request.method == 'POST':
 
         # The user passed a bunch of tables to map; get the values and proceed
@@ -273,33 +285,68 @@ def map_table():
 			return render_template("table.html", selected_tables=selected_tables_processed)
 			
 		elif request.form['actiontype'] == 'save':	
-			raw = request.form.getlist('raw')
-			fhir_resource_name = request.form.getlist('fhir_name')
-			fhir_resource_value = request.form.getlist('fhir_value')
-			form_data = zip(raw,fhir_resource_name,fhir_resource_value)
-			mapping_name = request.form['name']
-			filename = mapping_name.replace(" ","_")
-			#user_id = 1
-			#mapid = get_next_mapping_id()
-			#
-			#c, conn = connection()
-			#			
-			#save_query = ("INSERT INTO fhir_mappings (mappingID, userID, mapping_name, raw, fhir_name, fhir_value) " +
-			#"VALUES("+mapid+", "+user_id+", 'name', 'family_name', 'Organization_Contact', 'name','');")
-			#c.execute(login_query)
-			#conn.close()
-
-			json = "{\""+mapping_name+"\": { \"mappings\": ["
-			for a,b,c in itertools.izip(raw,fhir_resource_name,fhir_resource_value):
-				json += "{\"raw\": \""+a+"\", \"fhir_resource\": \""+b+"\", \"fhir_value\": \""+c+"\"},"
-			json = json[:-1] #get rid of last comma in the sequence
-			json += "]}}"
+			filename = request.form['name']
+			tables = request.form.getlist('table')
+			
+			json_str = "{\n\t\"mapping_name\":\""+filename+"\",\n\t\"mappings\": {"
+			for table in tables:
+				raw = request.form.getlist(str(table)+"-raw")
+				rname = request.form.getlist(str(table)+"-fhir_name")
+				rval = request.form.getlist(str(table)+"-fhir_value")
+								
+				json_str += "\n\t\t\""+table+"\" : {\n\t\t\t\"raw\" : ["
+				for val in raw:
+					json_str += "\""+val+"\","
+				json_str = json_str[:-1]
+				json_str += "],\n\t\t\t\"fhir_resource\" : ["
+				for val in rname:
+					json_str += "\""+val+"\","
+				json_str = json_str[:-1]
+				json_str += "],\n\t\t\t\"fhir_value\" : ["
+				for val in rval:
+					json_str += "\""+val+"\","
+				json_str = json_str[:-1]
+				json_str += "]\n\t\t},"
+				
+			json_str = json_str[:-1]
+			json_str += "\n\t}\n}"	
 
 			strIO = StringIO.StringIO()
-			strIO.write(str(json))
+			strIO.write(str(json_str))
 			strIO.seek(0)
 			return send_file(strIO,attachment_filename=filename+".json",as_attachment=True)
-			#return render_template('save.html', data=zip(raw,fhir_resource_name,fhir_resource_value), name=mapping_name)
+			
+		elif request.form['actiontype'] == 'importjson':
+			if 'file' not in request.files:
+				return
+			
+			file = request.files['file']
+			file.seek(0)
+			str_json = file.read()
+			raw_json = json.loads(str_json.decode('utf-8'), object_pairs_hook=OrderedDict)
+						
+			tables = raw_json['mappings'].keys()
+			
+			print(tables)
+						
+			for table in tables:
+				best_mappings = OrderedDict()
+				raw = raw_json['mappings'][table]['raw']
+				rname = raw_json['mappings'][table]['fhir_resource']
+				rval = raw_json['mappings'][table]['fhir_value']
+				tag_mappings = "mappings-" + table
+				tbl_data = zip(raw,rname,rval)
+				
+				for a,b,c in tbl_data:
+					best_mappings[a] = [b, c]
+					tag_fhirfields = "fhirfields-%s" % table
+					flash(globals()[b], tag_fhirfields)
+				
+				init_constants()
+				flash(best_mappings, tag_mappings)	
+				flash(constants_list, 'fhir_names')
+				
+			return render_template("table.html", selected_tables=tables)
 			
 		else:
 			# Re-direct to home if the form was not sent properly

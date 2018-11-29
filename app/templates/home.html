@@ -19,6 +19,7 @@
                         <ul>
                             <li><a href="#intro">Welcome</a></li>
                             <li><a href="#one">Map Resource</a></li>
+							<li><a href="#two">Import Mapping</a></li>
                         </ul>
                     </nav>
 
@@ -76,6 +77,34 @@
                                             <input type="submit" class="button">
                                         </ul>
 
+                                    </form>
+                                </section>
+                                <section>
+                                    <ul class="contact">
+                                        <!--
+                                            Right space
+                                        -->
+                                    </ul>
+                                </section>
+                            </div>
+                        </div>
+                    </section>
+					
+					<!-- Import Mapping -->
+                    <section id="two" class="wrapper style1 fullscreen fade-up">
+                        <div class="inner">
+                            <h4></h4>
+                            <div class="split style2">
+                                <section>
+                                    <form target="_blank" method="post" action="/map_table" enctype="multipart/form-data">
+										<input type="hidden" name="actiontype" id="actiontype" value="importjson">
+                                        <div class="field">
+                                            <label for="import">Select a JSON File</label>
+                                            <input accept="application/json" type="file" name="file" id="file" required/>
+                                        </div>
+                                        <ul class="actions">
+                                            <input type="submit" class="button">
+                                        </ul>
                                     </form>
                                 </section>
                                 <section>
