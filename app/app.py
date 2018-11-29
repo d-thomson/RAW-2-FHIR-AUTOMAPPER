@@ -326,9 +326,7 @@ def map_table():
 			raw_json = json.loads(str_json.decode('utf-8'), object_pairs_hook=OrderedDict)
 						
 			tables = raw_json['mappings'].keys()
-			
-			print(tables)
-						
+		
 			for table in tables:
 				best_mappings = OrderedDict()
 				raw = raw_json['mappings'][table]['raw']
