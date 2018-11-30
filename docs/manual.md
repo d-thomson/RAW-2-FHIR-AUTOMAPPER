@@ -61,7 +61,7 @@ Once the mappings are completed, which can take several minutes, the user will b
 
 On this page, users can select the tables which they have mapped at the top and the suggesting mappings will appear below. The "Raw Data" fields have been pulled from the database and the "FHIR Resource" along with a suggested value are on the right. If the suggested mappings are incorrect or unknown, the user can select the field and manually correct it.
 
-![Alt text](doc-pics/results-change-resource?raw=true "Manual Correction")
+![Alt text](doc-pics/results-change-resource.png?raw=true "Manual Correction")
 
 Once the user is satisfied with the mappings, the user can specficy a name to export their mapping as a JSON file. This mapping can be imported by other users who may wish to build off of it.
 
