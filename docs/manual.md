@@ -37,7 +37,33 @@ Once connected to the application, the user will be presented a login screen bef
 * **username:** demo
 * **password:** password!23
 
-INSERT SCREENSHOT OF LOGIN PAGE HERE
+![Alt text](doc-pics/login.png?raw=true "Login")
+
+After logging in, the user is presented with the home page of the application. Here, the user can elect to map a new database or import a previously mapped database.
+
+To map a new database, the user should click on the "Map Resource" option on the left hand side of the page. Our demo will be utilizing the MIMIC database available by connecting to the Georgia Tech VPN.
+
+* **Database Endpoint** data.hdap.gatech.edu
+* **Database Name** mimic_v5
+* **Database Port** 5433
+* **Database Username** team0
+* **Database Password** hdapM1m1c4Students!
+
+![Alt text](doc-pics/automap.png?raw=true "Map Resource")
+
+Before the application suggests FHIR resource mappings, the user will need to specify which tables of the database they would like the application to map.
+
+![Alt text](doc-pics/select-tables.png?raw=true "Select Tables")
+
+Once the mappings are completed, which can take several minutes, the user will be presented with the following page.
+
+![Alt text](doc-pics/results.png?raw=true "Results")
+
+On this page, users can select the tables which they have mapped at the top and the suggesting mappings will appear below. The "Raw Data" fields have been pulled from the database and the "FHIR Resource" along with a suggested value are on the right. If the suggested mappings are incorrect or unknown, the user can select the field and manually correct it.
+
+![Alt text](doc-pics/results-change-resource?raw=true "Manual Correction")
+
+Once the user is satisfied with the mappings, the user can specficy a name to export their mapping as a JSON file. This mapping can be imported by other users who may wish to build off of it.
 
 
 
