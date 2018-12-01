@@ -1,3 +1,5 @@
+**FHIR Resources:** http://hl7.org/fhir/
+
 **FuzzyWuzzy String matching:** https://github.com/seatgeek/fuzzywuzzy
 
 **Difflib Helper for computing deltas**: https://docs.python.org/2/library/difflib.html
