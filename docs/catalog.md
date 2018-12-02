@@ -1,4 +1,13 @@
-You must have a catalog.pdf file that yields “Table of Contents” type details on the contents of your project. It shall be called “catalog.pdf.” This file is to be placed in “Final Delivery” directory. Each element of your project, including its location, must be spelled out clearly in this document. Additionally, your Team Name, Team Members, Project Name and GitHub link should be included in this file.
+# Raw to FHIR Auto-mapper Manual
+**Team Vnnnng**:
+  * Kevaugn Brown
+  * Bryan Gorges
+  * Zach Hanley
+  * Sumit Kumar
+  * Steven Seidman
+  * Daniel Thomson
+  
+**GitHub link:** https://github.gatech.edu/gt-cs6440-hit-fall2018/RAW-2-FHIR-AUTOMAPPER
 
 # Table of Contents
 * Final Dleivery -- Directory full of duplicate pdfs
@@ -27,8 +36,11 @@ You must have a catalog.pdf file that yields “Table of Contents” type detail
   * schema.sql -- Save mapping
 * docs -- Mostly markdown documentation
   * Research
+    * ResearchLinks.md -- Links for various references on FHIR standards and python libs
+    * fhir.schema.json.zip -- Contains all FHIR classes used in app logic
     * interview.md -- Requirements from talking with Alvin
     * research.md -- Misc. research without files
+  * doc-pics -- Directory for images included in documentation
   * catalog.md -- this file
   * ganttChart.md -- Chart of how the app was developed
   * manual.md -- Instructions on how to use the running app.
