@@ -1,5 +1,3 @@
-Every application MUST include an “as detailed as necessary” manual. All of the documentation that you submit with your final project should be treated as an official document – this includes the manual. Therefore, any manual that is not carefully structured or clearly written will result in significant point loss. Additionally, your Team Name, Team Members, Project Name and GitHub link should be included in this file. It shall be called “Manual – <Team Name>.pdf.”
-
 # Raw to FHIR Auto-mapper Manual
 **Team Vnnnng**:
   * Kevaugn Brown
