@@ -1,4 +1,4 @@
-# Raw to FHIR Auto-mapper Manual
+# Raw to FHIR Auto-mapper Catalog
 **Team Vnnnng**:
   * Kevaugn Brown
   * Bryan Gorges
