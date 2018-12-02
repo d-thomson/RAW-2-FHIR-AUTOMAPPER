@@ -1,5 +1,3 @@
-Provide instructions [“navigate to this URL… type in this… click on that…etc.”] for us (Instructors/OMs) to follow in order to run your application, please identify these details in a file called “Special Instructions – <Team Name>.pdf” This file is to be placed in “Final Delivery” directory. This file is not optional. We expect to launch your application via a docker-compose.yml file to be found at the root of the repository. If your software development process/tool caused the docker-compose file to be in a different folder and/or you have special build/launch instructions, also include these details in the “Special Instructions” PDF.
-
 # Raw to FHIR Auto-mapper Special Instructions
 
 * To run this application and connect to the Health Data Analytics Platorm, the user must use the Georgia Tech VPN. Instructions on getting started with the Campus VPN can be found [here](https://f_aq.oit.gatech.edu/content/how-do-i-get-started-campus-vpn).
