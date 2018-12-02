@@ -22,3 +22,5 @@ To access the functioning demo application, the following credentails can be use
 
 Click the 'Sign in' button after credentials entry for successful login.
 
+For further end user instructions on how to use the application refer to the manual.
+
