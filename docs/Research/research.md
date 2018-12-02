@@ -11,6 +11,6 @@ In 2008, Only 4% of providers utilized EMR systems, compared to 2018 where most 
 As EMRs have exploded in adoption over the last 10 years, many standards were developed for different areas. Some existing EMR systems utilize "FHIR Adapters" to solve interoperability with new FHIR standard. Multiple standards were developed in the same areas such as clinical documentation, relationships, and processes. Such standards as ICD-10, NDC, CPT, SNOMED, LOINC and RxNorm need to be taken into consideration when mapping raw data to FHIR resources. Another potential issue is that of data warehousing and analytics platforms. Google Cloud Platform, Amazon AWS and Microsoft Azure cloud services all offer data warehousing and analytics platforms for big data that are often used by healthcare providers. Simply connecting to a database for mappings is not an option here as multiple sources are contributing data. 
 
 ## References
-[1] https://www.emrandehr.com/2018/07/23/physicians-lack-it-tools-needed-for-value-based-care/
-[2] https://www.healthcareitnews.com/news/why-ehr-data-interoperability-such-mess-3-charts/
-[3] https://vigyanix.com/blog/healthcare-interoperability-opportunities-challenges-solutions/
+[1] https://www.emrandehr.com/2018/07/23/physicians-lack-it-tools-needed-for-value-based-care/  
+[2] https://www.healthcareitnews.com/news/why-ehr-data-interoperability-such-mess-3-charts/  
+[3] https://vigyanix.com/blog/healthcare-interoperability-opportunities-challenges-solutions/  
