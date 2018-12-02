@@ -1,5 +1,3 @@
-Your final Gantt Chart should be completely updated and clearly notated. You must include the specific names of each presenter(s) for each of the presentations. We will use this to cross check our records for your presenters, for each team member is required to present at least once this semester. It shall be called “Final Gantt Chart – <Team Name>.pdf.” This file is to be placed in “Final Delivery” directory.
-
 # Gantt Chart
 
 ![Alt text](doc-pics/Gantt.png?raw=true "gantt")
