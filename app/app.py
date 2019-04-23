@@ -354,4 +354,3 @@ def map_table():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-    # get_db_schema(url='data.hdap.gatech.edu', dbname='mimic_v5', password='hdapM1m1c4Students!', username='team0', port='5433')
