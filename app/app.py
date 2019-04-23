@@ -240,7 +240,6 @@ def map_table():
 				selected_tables_processed.append(table)
 				print("--- Loading table for" + table, sys.stderr)
 
-				# conn = psycopg2.connect('host=data.hdap.gatech.edu port=5433 dbname=mimic_v5 user=team0 password=hdapM1m1c4Students!')
 				database_string = 'host=' + url + ' port=' + db_port + ' dbname=' + db_name + ' user=' + username + ' password=' + password
 				print('DB String ' + database_string, file=sys.stderr)
 				conn = psycopg2.connect(database_string)
